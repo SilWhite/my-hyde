@@ -1,6 +1,5 @@
 # use DeepSeek LLM
-# KEY = 'sk-b0d1a733e4a44c4c91aaca082e3f9ed0' # my key, free tokens are unavailble
-key = "sk-77ca6e57c7324f31a7b5ef9fc6e9b29d"  # help from friend, 2024-11-23 16:20:16 unavailabled
+key = ""  
 model = "deepseek-chat"  # only one model of deepseek is supported for now
 
 
