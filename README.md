@@ -50,6 +50,7 @@
         conda install numpy=1.26
         ```
     - 如果自己配置环境，注意需要指定`pyserini==0.39.0`，新版本似乎无法导入模块。
+    - 如果自己配置环境，可能需要安装`faiss`，参考以下教程按需安装https://github.com/facebookresearch/faiss/blob/main/INSTALL.md
 - 模型、数据集、检索索引本地使用
 
     由于网络问题，代码中需要使用的HuggingFace模型、索引等文件，可能无法在线下载，可能需要手动下载并在`config.py`中进行本地地址配置。
