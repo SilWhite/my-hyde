@@ -5,21 +5,21 @@
 - 由于源代码使用jupyter notebook，个人不甚习惯，遂整理为`.py`文件。
     - 整理完发现好像jupyter notebook也挺好用，`.py`不便调试且会生成临时文件。
 - 使用DeepSeek LLM API（https://platform.deepseek.com ）替换GPT-3 API
-    - 该模型API可以免费注册获取500w token额度，但有时效
-    - 可以本地部署LLM以避免API的相关问题
+    - 该模型API可以免费注册获取500w token额度，但有时效（一个月）。
+    - 可以本地部署LLM以避免API的相关问题。
 - 测试集为TREC DL19
 - 实验结果如下
-    |test|map|nDCG@10|Recall@1000|
-    |:---:|:---:|:---:|:---:|
-    |BM25|30.1|50.6|75.0|
-    |Contriever|24.0|44.5|74.6|
-    |HyDE|41.8|61.3|88.0|
-    |1st result|39.6|58.7|85.6|
-    |2nd result|39.7|59.4|87.5|
-    |3rd result|39.1|59.7|85.7|
-    |4th result|40.7|60.8|87.6|
-    |5th result|39.5|59.1|86.7|
-    |6th result|40.6|61.1|86.0|
+    |    test    |  map  | nDCG@10 | Recall@1000 |
+    | :--------: | :---: | :-----: | :---------: |
+    |    BM25    | 30.1  |  50.6   |    75.0     |
+    | Contriever | 24.0  |  44.5   |    74.6     |
+    |    HyDE    | 41.8  |  61.3   |    88.0     |
+    | 1st result | 39.6  |  58.7   |    85.6     |
+    | 2nd result | 39.7  |  59.4   |    87.5     |
+    | 3rd result | 39.1  |  59.7   |    85.7     |
+    | 4th result | 40.7  |  60.8   |    87.6     |
+    | 5th result | 39.5  |  59.1   |    86.7     |
+    | 6th result | 40.6  |  61.1   |    86.0     |
     > 1st result: deepseek-chat, chat mode, 1 gen, system prompt: 'You are a helpful assistant'
     > 
     > 2nd result: deepseek-chat, chat mode, 1 gen, system prompt: ''
@@ -34,27 +34,44 @@
 
 ## 环境配置
 - 下载目录并进入`my-hyde`目录
-- 使用conda安装依赖
-    ```shell
-    conda env create -f environment.yml
-    ```
-    - 运行指令会生成名为`hyde-env`的环境，注意重名问题。
-    - 由于cuda版本问题，需要手动安装pytorch（conda安装会有问题，这里使用pip）
+- 环境配置
+  - 建议参考https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/ 配置清华源以加速下载。
+  - 使用`environment.yml`配置
+    - 使用conda安装依赖
         ```shell
-        pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+        conda env create -f environment.yml
         ```
-        - 也可以前往官网手动指定cuda版本(https://pytorch.org/get-started)
-        - 如果需要镜像下载加速，可参考https://docs.infini-ai.com/posts/download-pytorch-from-mirror.html
-          ```shell
-          pip3 install torch torchvision torchaudio -f https://mirrors.aliyun.com/pytorch-wheels/cu121/
-          ```
-    - 可能遇到numpy版本问题，需要手动回退版本
-        ```shell
-        pip uninstall numpy
-        conda install numpy=1.26
-        ```
-    - 如果自己配置环境，注意需要指定`pyserini==0.39.0`，新版本似乎无法导入模块。
-    - 如果自己配置环境，可能需要安装`faiss`，参考以下教程按需安装https://github.com/facebookresearch/faiss/blob/main/INSTALL.md
+        - 运行指令会生成名为`hyde-env`的环境，注意重名问题。
+        - 由于cuda版本问题，需要手动安装pytorch（conda安装会有问题，这里使用pip）
+            ```shell
+            pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+            ```
+            - 也可以前往官网手动指定cuda版本(https://pytorch.org/get-started)
+            - 如果需要镜像下载加速，可参考https://docs.infini-ai.com/posts/download-pytorch-from-mirror.html
+            ```shell
+            pip3 install torch torchvision torchaudio -f https://mirrors.aliyun.com/pytorch-wheels/cu121/
+            ```
+  - 手动配置
+    - 使用`conda env create -n <env_name> python=3.10`创建环境，注意基于`python=3.10`版本。
+    - 使用`pip install pyserini==0.39.0`安装pyserini，注意版本号，最新版本可能无法导入模块。
+    - 可能需要安装`faiss`，参考以下教程按需安装https://github.com/facebookresearch/faiss/blob/main/INSTALL.md
+      ```shell
+      # CPU-only version
+      $ conda install -c pytorch faiss-cpu=1.9.0
+
+      # GPU(+CPU) version
+      $ conda install -c pytorch -c nvidia faiss-gpu=1.9.0
+
+      # GPU(+CPU) version with NVIDIA RAFT
+      $ conda install -c pytorch -c nvidia -c rapidsai -c conda-forge faiss-gpu-raft=1.9.0
+
+      # GPU(+CPU) version using AMD ROCm not yet available
+      ```
+  - 上述过程可能遇到`numpy`版本问题，需要手动回退版本
+      ```shell
+      pip uninstall numpy
+      pip install numpy=1.26
+      ```
 - 模型、数据集、检索索引本地使用
 
     由于网络问题，代码中需要使用的HuggingFace模型、索引等文件，可能无法在线下载，可能需要手动下载并在`config.py`中进行本地地址配置。

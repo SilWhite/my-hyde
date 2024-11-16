@@ -1,5 +1,5 @@
 # use DeepSeek LLM
-key = ""  
+key = ""
 model = "deepseek-chat"  # only one model of deepseek is supported for now
 
 
