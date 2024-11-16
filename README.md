@@ -45,6 +45,9 @@
         ```
         - 也可以前往官网手动指定cuda版本(https://pytorch.org/get-started)
         - 如果需要镜像下载加速，可参考https://docs.infini-ai.com/posts/download-pytorch-from-mirror.html
+          ```shell
+          pip3 install torch torchvision torchaudio -f https://mirrors.aliyun.com/pytorch-wheels/cu121/
+          ```
     - 可能遇到numpy版本问题，需要手动回退版本
         ```shell
         pip uninstall numpy
